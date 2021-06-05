@@ -1,37 +1,119 @@
-## Welcome to GitHub Pages
+## Project 3
 
-You can use the [editor on GitHub](https://github.com/briannawei/cit281-p3/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+### p3-module.js
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+/*
+Name: Brianna Wei
+Professor Phil Colbert
+Project 3
+p3-module.js
+*/
 
-### Jekyll Themes
+function validDenomination(coin) {
+    let denomArray = [1, 5, 10, 25, 50, 100];
+    if (denomArray.indexOf(coin) !== -1) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/briannawei/cit281-p3/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+function valueFromCoinObject(obj) {
+    const {denom = 0, count = 0} = objDecon;
+    return denom * count;
+}
 
-### Support or Contact
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+function valueFromArray(arr) {
+    const resultReduced = (result, currentObj) => result + currentObj + valueFromCoinObject(currentObj);
+    return arr.reduce(resultReduced);
+}
+
+
+function coinCount(...coinage) {
+    return valueFromArray(coinage);
+}
+
+// console.log statements given
+console.log("{}", coinCount({denom: 5, count: 3})); 
+console.log("{}s", coinCount({denom: 5, count: 3},{denom: 10, count: 2})); 
+const coins = [{denom: 25, count: 2},{denom: 1, count: 7}]; 
+console.log("...[{}]", coinCount(...coins)); 
+console.log("[{}]", coinCount(coins));
+
+
+```
+
+
+
+### p3-server.js
+
+```
+/*
+Name: Brianna Wei
+Professor Phil Colbert
+Project 3
+p3-server.js
+*/
+
+// part 7
+const { fstat } = require("fs");
+const { coinCount } = require("./p3-module.js");
+const fastify = require("fastify")();
+
+// part 8
+const server = http.createServer((request,reply) => {
+      fs.readFile(`${__dirname}/index.html`, (request, reply) => {
+          reply
+            .code(200);
+            header("Content-Type", "text/html; charset=utf-8");
+          fastify.listen(port, IPAdress, (err, address) => {
+              if (err) {
+                  address.code(500);
+                  console.log(err);
+                  process.exit(1);
+                };
+
+            });
+        });
+});
+
+server.listen(port, hostname,() => {
+    console.log(`Server running at http://${hostname}:${port}/`);
+});
+ 
+
+const http = require('http')
+const fs = require('fs');
+const hostname = '127.0.0.1'
+const IPAdress = "localhost";
+const port = 8080;
+
+fastify.get("/coin", (denom, count) => {
+    const {denom, count} = request.query;
+    coinCount()
+    reply
+      .code(200)
+      .header("Content-Type", "text/html; charset=utf-8")
+      .send(`<h2>Value of ${count} of ${denom} is ${coinValue}</h2><br /><a href="/">Home</a>`);
+  });
+
+// part 10
+fastify.get("/coins", (option) => {
+    const {option} = request.query;
+    coinValue()
+    coinCount({ denom: 5, count: 3 }, { denom: 10, count: 2 }); //option 1
+    coinCount(...coins); // option 2
+    coinCount(coins); // option 3
+    reply
+      .code(200)
+      .header("Content-Type", "text/html; charset=utf-8")
+      .send(`<h2>Option ${option} value is ${coinValue}</h2><br /><a href="/">Home</a>`);
+  });
+  
+  
+```
+
